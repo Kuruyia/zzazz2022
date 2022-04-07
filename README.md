@@ -89,13 +89,13 @@ But then, out of nowhere, a revelation: let's poke around with the input and see
 And this is where everything went for the best: I quickly remarked that each character of the input had a "weight" in the output, and that each character was independent from the other ones.
 
 A very simplified example of this would be:
-- Password "AA" leads to checksum 0x00
-- Password "BA" leads to checksum 0x09
-- Password "CA" leads to checksum 0x12 (0x09 * 2)
-- Password "AB" leads to checksum 0x45
-- Password "BB" leads to checksum 0x4E (0x09 + 0x45)
+- Password "AA" leads to checksum `0x00`
+- Password "BA" leads to checksum `0x09`
+- Password "CA" leads to checksum `0x12` (`0x09` * 2)
+- Password "AB" leads to checksum `0x45`
+- Password "BB" leads to checksum `0x4E` (`0x09` + `0x45`)
 
-We can clearly see that character #1 has a "weight" of 0x09, and character #2 has a "weight" of 0x45. That is pretty much what was happening with this algorithm.
+We can clearly see that character #1 has a "weight" of `0x09`, and character #2 has a "weight" of `0x45`. That is pretty much what was happening with this algorithm.
 
 This is how I replaced 1.5kB worth of script with a few multiply bois. So I [implemented that](https://github.com/Kuruyia/zzazz2022/blob/main/dev/zzazz2022_challenge3_taketwo/main.cpp), verified that it was giving the correct checksums for known input, and let it do its bruteforce shenanigans.
 
@@ -103,4 +103,4 @@ What about performance? We're talking 8M checksums/s... oh wait, forgot the `-O3
 
 So I left it running for quite a while, and it finally gave me a valid password. Quite a while being approximately 12 seconds of course.
 
-So I got back to Cracker Cavern III, talked to the NPC, entered the password `l72SkAAAAA`, let it verify the password client-slide and server-side, and bingo, Cracker Cavern III was finally done! Now it's time to catch some zzzZZZzzz.
+So I got back to Cracker Cavern III, talked to the NPC, entered the password `l72SkAAAAA`, let it verify the password client-slide and server-side, and bingo, Cracker Cavern III was finally done! Now it's time to catch some well-deserved _zzzZZZzzz_.
