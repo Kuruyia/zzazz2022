@@ -1,0 +1,132 @@
+Authentication:
+    Via token, header X-FoolsSessionToken on each request.
+    Server replies with header X-FoolsRefreshToken, which is the X-FoolsRefreshToken for the next request
+
+    Endpoint: POST https://fools2022.online/login
+        Request headers:
+            Content-Type: application/json
+            User-Agent: kuruyia-dumps-maps/1.0.0
+
+        Request (JSON):
+            {
+                "u": "username",
+                "p": "password",
+            }
+
+        Response (JSON):
+            {
+                "error": 0,
+                "data": {
+                    "session": "session_token",
+                    "uid": 4923818,
+                    "scope": "fools2022"
+                }
+            }
+
+Endpoint: POST https://fools2022.online/packet/4923818
+
+Packet ID 0x01:
+    Description: Fetch a map
+
+    Request headers:
+        Content-Type: text/plain
+        User-Agent: kuruyia-dumps-maps/1.0.0
+        X-FoolsSessionToken: <session_token>
+
+    Request (Raw):
+        Base-64 encoded map to fetch
+        Byte 0x00 equal to 0x01
+        Bytes 0x04 to 0x05 are the map ID
+        Bytes 0x01 to 0x03 and 0x06 to 0x07 can be set to 0
+
+    Response (Raw):
+        Base-64 encoded raw map data
+
+Packet ID 0x07:
+    Description: Request a certificate
+
+Packet ID 0x05:
+    Description: Play the lottery
+
+    Response (Raw, 32 bytes):
+        Bytes 0x00 to 0x0C: Winning letters (In the form "A, B, C, D, E")
+        Bytes 0x0D to 0x0F: Always 0xFF
+        Bytes 0x10 to 0x1F: Score ("bepis", "single", "double", "triple",
+                            "quadruple", "quintuple"), with OxFF padding
+                            to the end
+
+===================
+=    MAP FETCH    =
+===================
+
+Fetch Central Square #1: AZ7qPAABERs=
+    Hex View  00 01 02 03 04 05 06 07  08 09 0A 0B 0C 0D 0E 0F
+
+    00000000  01 9E EA 3C 00 01 11 1B                           ...<....        
+
+Fetch Southern Pass #1: AR5Rhz0/Dwc=
+    Hex View  00 01 02 03 04 05 06 07  08 09 0A 0B 0C 0D 0E 0F
+
+    00000000  01 1E 51 87 3D 3F 0F 07                           ..Q.=?..        
+
+Fetch Central Square #2: ATeyPQABERs=
+    Hex View  00 01 02 03 04 05 06 07  08 09 0A 0B 0C 0D 0E 0F
+
+    00000000  01 37 B2 3D 00 01 11 1B                           .7.=....        
+
+Fetch Southern Pass #2: ATl5hD0/Dwc=
+    Hex View  00 01 02 03 04 05 06 07  08 09 0A 0B 0C 0D 0E 0F
+
+    00000000  01 39 79 84 3D 3F 0F 07                           .9y.=?..        
+
+Fetch Central Square #3: AfOSQwABERs=
+    Hex View  00 01 02 03 04 05 06 07  08 09 0A 0B 0C 0D 0E 0F
+
+    00000000  01 F3 92 43 00 01 11 1B                           ...C....        
+
+Format:
+           0x00: Constant byte 0x01
+    0x01 - 0x03: Counter?
+    0x04 - 0x05: Map ID
+    0x06 - 0x07: Checksum?
+
+================
+=   GET CERT   =
+================
+
+Default request:
+    Hex View  00 01 02 03 04 05 06 07  08 09 0A 0B 0C 0D 0E 0F
+
+    00000000  07 00 00 00 68 6F 6C 64  65 72 3D 41 65 6C 69 74  ....holder=Aelit
+    00000010  61 2F 74 79 70 65 3D 73  69 6C 76 65 72 FF C0 46  a/type=silver..F
+    00000020  00 00 00 00                                       ....            
+
+Forged request:
+    Hex View  00 01 02 03 04 05 06 07  08 09 0A 0B 0C 0D 0E 0F
+
+    00000000  07 00 00 00 68 6F 6C 64  65 72 3D 4B 75 72 75 79  ....holder=Kuruy
+    00000010  69 61 2F 74 79 70 65 3D  67 6F 6C 64 FF C0 46 00  ia/type=gold..F.
+    00000020  00 00 00                                          ...             
+
+
+21 32 27 A7 E8 5C 4B 07 CF D8 2E 6B BD 30 32 CA     authority=Cracke
+08 CF 57 7C 9E E6 7A 88 E3 8A 76 CF C5 3A FA 89     rFour/serial=720
+3F 5B 26 18 8F CE 1B B2 0F E4 C3 9E B1 86 95 69     4231/holder=bbbb
+A8 4C 9F 15 87 9F CA C3 77 8E 39 04 B9 68 DE 10     bbbbbbbbb/type=s
+B9 F9 F4 7B 23 CF CE C6 5C 8C 79 1C FB 21 CA 77     ilver
+
+authority=Cracke
+rFour/serial=290
+8603/holder=unde
+fined/type=silve
+r
+
+0x28 XOR 0x5B => s (0x73)
+0x1E XOR 0x77 => i (0x69)
+0x46 XOR 0x2A => l (0x6C)
+0xFC XOR 0x8A => v (0x76)
+
+g 0x67 => 0x3C
+o 0x6F => 0x18
+l 0x6C => 0x46
+d 0x64 => 0xEE

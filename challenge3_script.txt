@@ -1,0 +1,264 @@
+static const u8 sScriptConditionTable[6][3] =
+{
+//  <  =  >
+    1, 0, 0, // <
+    0, 1, 0, // =
+    0, 0, 1, // >
+    1, 1, 0, // <=
+    0, 1, 1, // >=
+    1, 0, 1, // !=
+};
+
+===============
+=   ADDRESS   =
+===============
+setvar/addvar: 8001h => 020375DAh
+
+=======================
+=       PRELUDE       =
+=======================
+
+=== AT 0x201835E ===
+160180391B
+setvar 8001h, 1B39h
+
+======================
+=     SUM SCRIPT     =
+======================
+(Size is 0x4D)
+
+=== AT 0x02018363 (+0x00) ===
+1200C41D0202
+loadbytefromptr 00h, 02021DC4h
+
+=== AT 0x02018369 (+0x06) ===
+130072830102
+setptrbyte 00h, 02018372h
+
+=== AT 0x0201836F (+0x0C) ===
+170180XX00
+addvar 8001h, 00XXh
+
+Exemple: addvar 8001h, 00ADh
+
+=== AT 0x02018374 (+0x11) ===
+1200DA750302
+loadbytefromptr 00h, 020375DAh
+
+=== AT 0x0201837A (+0x17) ===
+130099830102
+setptrbyte 00h, 02018399h
+
+=== AT 0x02018380 (+0x1D) ===
+1200DB750302
+loadbytefromptr 00h, 020375DBh
+
+=== AT 0x02018386 (+0x23) ===
+13009A830102
+setptrbyte 00h, 0201839Ah
+
+=== AT 0x0201838C (+0x29) ===
+1601800000
+setvar 8001h, 0000h
+
+=== AT 0x02018391 (+0x2E) ===
+1602804900
+setvar 8002h, 0049h
+
+=== AT 0x02018396 (+0x33) ===
+170180YYXX
+addvar 8001h, XXYYh
+
+Exemple: addvar 8001h, 1BE6h
+
+=== AT 0x0201839B (+0x38) ===
+1802800100
+subvar 8002h, 0001h
+
+=== AT 0x020183A0 (+0x3D) ===
+2102800000
+compare_var_to_value 8002h, 0000h
+
+=== AT 0x020183A5 (+0x42) ===
+060596830102
+goto_if 05h (!=), 02018396h
+
+=== AT 0x020183AB (+0x48) ===
+170180DF18
+addvar 8001h, 18DFh
+
+======================
+=    VALID SCRIPT    =
+======================
+
+=== AT 0x02018970 ===
+210380EFB0
+compare_var_to_value 8003h, B0EFh
+
+=== AT 0x02018976 ===
+06058D890102
+goto_if 05h (!=), 0201898Dh
+
+=== AT 0x0201897C ===
+210180B9D4
+compare_var_to_value 8001h, D4B9h
+
+=== AT 0x02018981 ===
+06058D890102
+goto_if 05h (!=), 0201898Dh
+
+=== AT 0x02018987 ===
+160D800100
+setvar 800Dh, 0001h
+
+=== AT 0x0201898C ===
+03
+return
+
+=== AT 0x0201898D ===
+160D800000
+setvar 800Dh, 0000h
+
+=== AT 0x02018992 ===
+03
+return
+
+===========
+=  DUMPS  =
+===========
+AAAA:
+    0x02018396: 0x1BF4
+    0x020183E3: 0x122E
+    0x02018430: 0xF814
+    0x0201847D: 0xABAE
+
+BAAA:
+    0x02018396: 0x1BF5
+    0x020183E3: 0x1277
+    0x02018430: 0x13BD
+    0x0201847D: 0x1343
+
+ABAA:
+    0x02018396: 0x1BF4
+    0x020183E3: 0x122F
+    0x02018430: 0xF875
+    0x0201847D: 0xB09B
+
+AABA:
+    0x02018396: 0x1BF4
+    0x020183E3: 0x122E
+    0x02018430: 0xF815
+    0x0201847D: 0xABBB
+
+AAAB:
+    0x02018396: 0x1BF4
+    0x020183E3: 0x122E
+    0x02018430: 0xF814
+    0x0201847D: 0xABAF
+
+================
+=   CHAR ENC   =
+================
+
+A => Z: BBh => D4h
+a => z: D5h => EEh
+0 => 9: A1h => AAh
+. =>    ADh
+, =>    B8h
+
+===============
+=   RESULTS   =
+===============
+
+AAAAAAAAAAAAAAA:    8001h: C8DBh
+                    8003h: 1C1Fh
+
+AAAAAAAAAAAAAAB:    8001h: C8DBh
+                    8003h: 1C1Fh
+
+BAAAAAAAAAAAAAA:    8001h: D95Ah
+                    8003h: B62Ch
+
+BBBBBBBBBBBBBBB:    8001h: 12F9h
+                    8003h: BD89h
+
+==============
+=   TARGET   =
+==============
+
+8001h: D4B9h
+8003h: B0EFh
+
+===============
+= VAL CHANGES =
+===============
+
+8001h: 0xD95A
+8003h: 0xB62C
+800Dh: 0x0
+Keyboard buffer: BAAAAAAAAA
+8001h diff: 0x107F
+8003h diff: 0x9A0D
+
+8001h: 0x9968
+8003h: 0x2FC4
+800Dh: 0x0
+Keyboard buffer: ABAAAAAAAA
+8001h diff: 0xD08D
+8003h diff: 0x13A5
+
+8001h: 0x3854
+8003h: 0x85E4
+800Dh: 0x0
+Keyboard buffer: AABAAAAAAA
+8001h diff: 0x6F79
+8003h diff: 0x69C5
+
+8001h: 0x5CE2
+8003h: 0x86B8
+800Dh: 0x0
+Keyboard buffer: AAABAAAAAA
+8001h diff: 0x9407
+8003h diff: 0x6A99
+
+8001h: 0xA28
+8003h: 0xC110
+800Dh: 0x0
+Keyboard buffer: AAAABAAAAA
+8001h diff: 0x414D
+8003h diff: 0xA4F1
+
+8001h: 0x1906
+8003h: 0x98DA
+800Dh: 0x0
+Keyboard buffer: AAAAABAAAA
+8001h diff: 0x502B
+8003h diff: 0x7CBB
+
+8001h: 0x4BB4
+8003h: 0x82BE
+800Dh: 0x0
+Keyboard buffer: AAAAAABAAA
+8001h diff: 0x82D9
+8003h diff: 0x669F
+
+8001h: 0x9D10
+8003h: 0x9BD6
+800Dh: 0x0
+Keyboard buffer: AAAAAAABAA
+8001h diff: 0xD435
+8003h diff: 0x7FB7
+
+8001h: 0x4550
+8003h: 0x3324
+800Dh: 0x0
+Keyboard buffer: AAAAAAAABA
+8001h diff: 0x7C75
+8003h diff: 0x1705
+
+8001h: 0xC972
+8003h: 0x1C72
+800Dh: 0x0
+Keyboard buffer: AAAAAAAAAB
+8001h diff: 0x97
+8003h diff: 0x53

@@ -1,0 +1,352 @@
+=== SOUTH ===
+Southern Camp:
+	- Find the heart scale [OK]
+	- Find the Poke Flute [OK]
+
+Yet Another Cave:
+	- Get HM Strength [OK]
+
+Broken Bridge:
+	- Get HM Surf [OK]
+
+Binary Woods:
+	- Get the item (Requires HM Surf) [OK]
+
+Yet Another Path:
+	- Do the water puzzle [OK]
+
+=== EAST ===
+Eastern Camp:
+	- "I only speak with cuties." Become the femboy. [OK]
+
+Grasslands:
+	- Get HM Cut [OK]
+
+Lost Woods:
+	- Find all 4 paths [x4, OK]
+
+Cracker Cavern:
+	- Do the 4 challenges
+
+=== WEST ===
+Dark Cave:
+	- Get HM Strength [OK]
+
+Western Camp:
+	- Get Helix Fossil [OK], Dome Fossil [OK], Old Amber [OK]
+	- Get PokeBalls x9
+		Yet Another Cave [OK, SOUTH]
+		Jumpity Jump [OK, WEST]
+		Broken Bridge [OK, SOUTH]
+		The Harbor [OK, NORTH]
+		Road of Ultimate [OK, NORTH]
+		Binary Woods [OK, SOUTH]
+		Gay Boi [OK, EAST]
+		Western Relic [OK, WEST]
+		Shimmering Pass [OK, NORTH]
+	- Find a lock to pick [OK, West Mansion, Standard pin tumbler lock design]
+
+West Mansion:
+	- Pick the lock [OK]
+	- Get HM Strength [OK]
+
+Path of Pointless:
+	- Get HM Surf [OK]
+	- Get HM Strength [OK]
+	- Get HM Cut [OK]
+
+Western Relic:
+	- Solve the problem [OK]
+
+Guard Post:
+	- Get a forged permit from the shady guy in Northern Glitchland [OK]
+	- Get HM Surf [OK]
+
+=== NORTH ===
+Glitched House:
+	- Get HM Cut
+
+Too Much Water:
+	- Get HM Surf [OK]
+	- Get all 4 microscopic nuclear things [OK]
+
+Northern Retreat:
+	- Get HM Surf [OK]
+
+Altering Cave:
+	- Find all forms [OK]
+	- Get HM Surf [OK]
+	- Get HM Strength
+
+===========================================================
+Eastern Camp problem:
+	Train A is exactly 200 miles west of train B.
+	Train A starts travelling north at a constant speed of 85 mph.
+	Then, 2 hours later, train B starts travelling east, at 90 mph.
+
+	Exactly 5 hours after train A starts moving, how many miles apart are the two trains?
+	Round the result down.
+
+	Resolution:
+		t = 0: A(-200; 0), B(0; 0)
+		t = 2: A(-200; 170), B(0; 0)
+		t = 5: A(-200; 425), B(270; 0)
+
+	So, about the Lost Woods... You can
+	get to the Eastern Edge from there!
+	To do that, it's pretty simple.
+	Just go east twice, then north twice!
+
+Lost Woods:
+	Lost Secret I: N,S,E,E [OK]
+	Lost Secret II: N,E,S,E [OK]
+		You know Lost Woods? I remember
+		there was a similar puzzle in an NES
+		game of my childhood.
+		Maybe the solution from that game
+		could work in there too?
+		Except replacing west with east,
+		since the entrance is to the west.
+		Definitely need to try it!
+	Lost Secret III: E,N,S,S [OK]
+	Eastern Edge: E,E,N,N [OK]
+
+Western Relic problem:
+	Cipher:
+	.O O. O. OO OO OO    OO O. O. O. .O O.
+	OO OO .O .O .O .O	   O. OO OO .. O. .O
+	O. O. .. O. .. OO    O. .. O. .. O. ..
+
+	Plaintext: TRENDY PHRASE
+
+Strange Rock problem:
+	Cipher:
+	OO O.    .O O.    O. O. O. O.    .O OO
+	OO .O    OO .O    OO .O O. .O    O. .O
+	.. O.    O. O.    .. O. O. ..    .. O.
+
+	.O O. O.    OO O. OO OO O.
+	OO OO .O    O. .O .O .. .O
+	O. .. ..    .. .. O. .. ..
+
+	OO .O O. O.    .O .O OO O. .O
+	O. O. O. .O    OO O. .. .O O.
+	.. .. OO ..    O. .. O. .. O.
+
+	Plaintext: GO TO HOLE IN THE FENCE FIVE TIMES
+
+Strange Bush problem:
+	Cipher:
+	O. OO OO O.    O. OO .O O. O. O. OO
+	.O .O .. .O    .O .O OO .O OO .O .O
+	O. O. .. ..    .. O. O. .. O. .. ..
+
+	.O O. O. O.    .O .O O. OO .O OO
+	OO .. O. ..    OO OO .O .O OO .O
+	.O .. O. O.    O. .O .. O. O. OO
+
+	.O .O O. OO .O    .O O. .O O. O.
+	O. OO .O O. O.    OO .O OO .. O.
+	O. O. .. O. O.    O. O. O. .. O.
+
+	Plaintext: ONCE ENTERED WALK TWENTY STEPS TOTAL
+
+Strange Sign problem:
+	Cipher:
+	OO .O OO O. O. O. OO
+	O. O. .O .. O. O. .O
+	.. .. O. .. O. O. OO
+
+	OO O. O.    .O .O O. O.
+	.O .O ..    OO O. O. O.
+	OO O. OO    .O .. O. O.
+
+	O. O. OO O. OO O.    OO O. OO O. O. OO
+	O. .O .. .O .. .O    O. .O .. O. .O .O
+	.. .. .. O. O. ..    .. .. O. .. O. OO
+
+	Plaintext: FINALLY YOU WILL BECOME FEMBOY
+
+Altering Cave problems:
+	CLEAR
+	Cipher:
+	O. O. .O .O
+	O. .O O. O.
+	O. .. O. O.
+
+	Plaintext: LESS
+
+	SURF
+	Cipher:
+	.O .O O. O.
+	O. OO .O OO
+	O. O. .. O.
+
+	Plaintext: STER
+
+	STRENGTH:
+	Cipher:
+	O. O. OO O.
+	OO .O O. .O
+	.. O. O. ..
+
+	Plaintext: HOPE
+
+Tiny Cavern problem:
+	Cipher:
+	OO .O .O O.
+	.O O. O. ..
+	.. .. O. ..
+
+	Plaintext: DISA
+
+Text Translation:
+	Cipher:
+	O. O. .O .O O. OO O.
+	O. .O OO OO .. .. .O
+	O. .. O. O. OO .. ..
+
+	Plaintext: LETTUCE
+	Fake Plaintext: NEVER GIVE UP
+
+	1 char = 6 bits?
+	2 letters/char ?
+
+HMs:
+	Surf: North [OK]
+	Cut: South
+	Strength: East [OK]
+	Teleport: West [OK]
+
+Time-based events:
+	- Altering Cave - Every 1 hour
+	- Game Corner Lottery - Every 3 hours
+	- Game Corner YEET - Every 4 hours
+
+Wise Man's Adventure Log:
+	Chapter I - The Edges
+	Travelling to each edge will reward
+	you with a unique field ability.
+	Visiting north grants SURF,
+	Visiting south grants CUT,
+	Visiting east grants STRENGTH,
+	Visiting west grants TELEPORT.
+
+	Chapter II - About the North
+	The northern fork is surely the
+	biggest, but don't fear it's size.
+	While the journey may be long, there
+	are no obstacles on the way, making
+	it one ofthe best edges to visit first.
+	
+	Chapter III - About the South
+	After the rockfall incident, the path
+	to the Southern Edge is blocked by
+	pushable boulders.
+	Make sure you have enough STRENGTH
+	before going for the Southern Edge!
+
+	Chapter IV - About the West
+	The TELEPORT ability allows you to
+	travel between camps easily.
+	Just stand on the hallowed ground
+	spots and choose your destination!
+	Be wary that you have to visit your
+	destination at least once beforehand.
+
+	Chapter V - About the East
+	The Lost Woods may be confusing, but
+	if you ask the locals, you can easily
+	get information about where to go!
+	Reaching the Edge is particularly easy.
+	Just help the girl do her homework.
+	If you're bad at maths, you can just
+	keep pestering her until she gives in.
+
+Cracker Cavern:
+	First Challenge:
+		Set value of address 0x2037360 (Player X position)
+
+	Second Challenge:
+		Freeze address 0x0203DB94 with value 0x1337
+		CodeBreaker code: 8203db94 13370000
+
+	Third Challenge:
+		Keyboard buffer address: 0x020045E0
+		0xDEADDEAD -> .j.j
+
+		Copied to addresses 0x02021CC4; 0x02021DC4; 0x020297D8
+			Watchpoint at 0x02021DC4:
+			Hit #1, #2: 0x08099682
+
+		NamingScreenData @ 0x02002DE0
+		0x020045E0: NamingScreenData->textBuffer
+
+		Textbox text address: 0x02021FC4
+		Textbox task address: 0x03005EA0
+		Task array address: 0x03005E00
+
+		Script? 0x02018363
+		Only checks 0x02021DC4 to 0x02021DCD (10 chars)?
+
+		Found! Password: l72SkAAAAA
+
+	Fourth challenge:
+		Requests a "certificate" from the server, with some
+		interesting data inside:
+		"holder=Aelita/type=silver"
+
+		The returned "certificate" seems to be the encrypted
+		authority, holder, certtype and serial.
+		Are the first 16 bytes of this "certificate" the AES key/IV?
+		NO: Just those first 16 bytes never change (authority=Cracke)
+
+		The appraisal process seems to decrypt the "certificate"
+		and display its contents (with some padding at the beginning
+		and the end).
+
+		Weird behavior observed when the holder is undefined,
+		it seems that we can directly manipulate the bytes of
+		the certificate type on bytes 0x2B to 0x2F of the
+		decoded "certificate".
+		Thanks to that, we can change the "silver" type
+		to "gold" and get the wanted result!
+
+		Writeup:
+		The "certificate" is encrypted with AES, most likely using
+		CBC.
+		We can guess that the key and IV must always be the same,
+		given that the first 16 bytes of every generated "certificate"
+		is the same (this is the first cipher block).
+
+		To get plaintext i+1, we must first decrypt cipher block i+1,
+		then XOR the decryption result with cipher block i.
+		That means that we can modify cipher block i to control the
+		the contents of plaintext i+1, which will hopefully contain
+		the "certificate" type.
+
+		After some research, we see that the serial number has no
+		real constraints on it (it is a 6-numbers number, but this
+		is not enforced by the server) and that a "certificate" doesn't
+		have to have an "holder" field (we can request a "certificate" from
+		server by just specifying the "type" field and omitting the "holder"
+		field).
+		We also control the contents and size of the "holder" field, and
+		the "type" field that we want to change is located right after
+		the "holder" field, meaning we can more or less control the position
+		of the "type" field, but more importantly, ensure that the "holder"
+		field is in the cipher block before the cipher block that contains
+		the "type" field.
+		Finally, the "serial" field is the field before the "holder" field,
+		but only the 4 last numbers of it are in the same cipher block than
+		the "holder" field.
+
+		Because we proved that the serial number format is not checked by
+		the server, that the holder name doesn't have to appear, and the
+		different positions of those fields in the cipher blocks, we
+		know we can trivially change the "certificate" "type" field by
+		thrashing the cipher block that's before, which contains the end
+		of the serial number and the holder name. We know the server
+		won't fail to appraise the "certificate" because one is
+		corrupted and the other is missing, and so we'd successfully
+		appraised a "gold" certificate.
