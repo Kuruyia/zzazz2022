@@ -68,7 +68,7 @@ And all of the possible opcodes are, of course, [documented on pokeemerald](http
 
 And there it lied: in one of the registers of the ARM CPU, one value that suspiciously looked like an address. Maybe was it the address of the script instruction being currently run? Indeed it was. Comparing the value of the opcode for this instruction (`loadbytefromptr`: `0x12`) and what was lying on that address confirmed this.
 
-Jackpot! I now know exactly where the script is located, and how to interpret all of this, I can now just poke around and see that the entire script section that does something with the keyboard input is located from address `0x201835E` to `0x02018994`.
+Jackpot! I now know exactly where the script is located, and how to interpret all of this, I can now just poke around and see that the entire script section that does something with the keyboard input is located from address `0x0201835E` to `0x02018994`.
 
 A quick glance at all of this code, I could clearly see that the same block was being copy-pasted a lot of time. This block is actually what was computing the checksum from the keyboard buffer, and two interesting facts could be seen: 1) the code only takes into account the first 10 characters of the keyboard buffer, meaning the password is 10 characters and not 16, and 2) there was not one, but two separate checksums that were computed.
 
@@ -104,3 +104,109 @@ What about performance? We're talking 8M checksums/s... oh wait, forgot the `-O3
 So I left it running for quite a while, and it finally gave me a valid password. Quite a while being approximately 12 seconds of course.
 
 So I got back to Cracker Cavern III, talked to the NPC, entered the password `l72SkAAAAA`, let it verify the password client-slide and server-side, and bingo, Cracker Cavern III was finally done! Now it's time to catch some well-deserved _zzzZZZzzz_.
+
+### Cracker Cavern IV
+
+Finally, we're arriving at the last challenge: the one to rule them all.
+
+We are immediately greeted by a signpost and an NPC. The signpost informs us that the NPC delivers "silver" certificates, but it'd like to see a "gold" one. Unfortunately, those certificates are protected by millitary-grade (big words here) AES encryption.
+
+(I'd recommend reading a bit about the [AES](https://en.wikipedia.org/wiki/Advanced_Encryption_Standard) and [Block cipher mode of operation](https://en.wikipedia.org/wiki/Block_cipher_mode_of_operation) Wikipedia pages to get some context if you're unfamiliar with how all of that works)
+
+Speaking to the NPC confirms that in fact, it contacts the server to generate a "silver" certificate for the holder name "Aelita". Trying to speak with the NPC again leads us to two choices: appraising the certificate, or generate a new one. Appraising the certificate seemingly makes another request to the server that will verify this certificate and give us all the infos it has: the holder name "Aelita", the certificate type "silver", but also a random 6-number serial number and an authority "CrackerFour".
+
+(Btw, we're not talking about certificates as in X.509 certificates, we're just dealing with a regular plain ol' encrypted blob of data)
+
+With all of that, let's start playing the game!
+
+First of all, I fired up Firefox and went to the HTML5 client so I could clearly see the traffic that was happening when the game was contacting the server (at that point, I had already done that to write my [map dumper](https://github.com/Kuruyia/zzazz2022/tree/main/dev/zzazz2022_mapdumper), so I already had something setup to authenticate with the server and start making requests), so I could get a better grasp at what was happening behind the scenes.
+
+The NPC was making two requests to the server: one for generating the certificate, and another one for appraising it. Let's look at the first request:
+
+That request's payload contained `holder=Aelita/type=silver`, and the response (after decoding the base64) contained 64 bytes of seemingly random data, which is exactly 4 times the block size of AES. Seems good so far!
+
+Let's try attacking that endpoint first, changing a value here and there and... nevermind, this seems to be a dead end, we can't use the server to generate a "gold" certificate for us. Anyway, while fiddling around with this endpoint, I noted some interesting facts:
+- The payload MUST exactly be 32 bytes. Nothing more, nothing less, or else the server rejects the request.
+- I can willingly change the holder name, no checks are being done on that. It's even possible to entirely omit the `holder` field.
+- On the other side, I, unfortunately, couldn't change the certificate `type` field to anything else than `silver`. Doing so would make the server reject this request, saying that we're not authorized to generate another certificate type (even if the holder name is "CrackerFour" :sadface:).
+- Byte `0xFF` is what terminates the payload. It can be omitted if the payload size takes the whole 32 bytes.
+
+Another interesting fact is that, while with the default holder name `Aelita`, the generated certificate size was 64 bytes, if I tried to generate a certificate with the maximum amount of letters in the holder name, a fifth cipher block would be generated, making the certificate size 80 bytes.
+
+Ok, so the certificate generation endpoint seems to be a no-go. What about the appraisal endpoint?
+
+WHY IS THE REQUEST SIZE 260 BYTES?!
+
+Let's caaaaaalm down, let's talk to the NPC once more so it can appraise the certificate once again: the request was exactly the same, good; let's talk to the NPC so it can generate a new certificate and appraise it: apart from where the certificate is stored in the request, every other byte is the same.
+
+To this day, I still don't know what all of those bytes are about, and I'd be more than happy to look at the source code of the client/server once they're released to understand what's all of that about (and if those bytes are even are used anyway).
+
+So all of that's very good, I can just yank the response, save it in a file, and then just read that file from my script whenever I want to make a request to that endpoint, taking care of replacing the certificate data with whatever I want (certificate data (encoded in base64) being very clearly located from bytes `0x04` to `0x5B` in this request).
+
+After confirming that this would indeed work, I started dissecting the response that this endpoint was giving: it's got the exact same data format we pass for requesting the generation of a certificate, and has all 4 fields that the NPC was saying.
+
+The response was something like `authority=CrackerFour/serial=123456/holder=Aelita/type=silver`, and it seemed like it was just the decrypted contents of the certificate.
+
+Because indeed it was! After some fiddling around, I quickly confirmed this fact, let's put those two next to each other:
+
+```
+Encrypted data                                      Decrypted data
+21 32 27 A7 E8 5C 4B 07 CF D8 2E 6B BD 30 32 CA     authority=Cracke
+F8 36 EF 12 57 CE 00 1C C5 F2 2B FE 6E 1E 2D DC     rFour/serial=123
+D9 34 7D 7E A5 E7 83 9A AB EB 78 24 DA 69 8F E7     456/holder=Aelit
+E2 33 D1 06 23 F0 F7 1F 43 01 2C 46 8F 1A E4 16     a/type=silver
+```
+
+Indeed, it perfectly fits! Another confirmation can be provided with the holder name size: a 9-characters long holder name would generate 4 cipher blocks (64 bytes of encrypted data), while a 10-characters long holder name would generate 5 cipher blocks (80 bytes of encrypted data). Exactly what we'd expect!
+
+Annnnnd this is where it all went downhill: I had mistakenly expected the encryption method to be `AES-ECB` (where every block is independent from the other ones), and this assumption could have entirely been verified by taking 10 seconds to generate two certificates with the same holder name. In that case, only cipher blocks #2 and #3 would have genuinely changed, and cipher blocks #4 (and #5, if present) would have changed because of that.
+
+So I unfortunately lost a few hours by testing various ideas that couldn't possibly work because of this false assumption. But I made interesting observations about that endpoint so not everything was lost:
+- The first cipher block is always the same, because the data it contains is always `authority=Cracke`.
+- The `authority` field MUST be present, and its value must be `CrackerFour`.
+- The `serial` field is, when legitimately generated by the server, just 6 numbers, but the appraisal endpoint doesn't enforce that format, and it can be basically whatever I wanted (I couldn't test if its presence was required tho').
+- The `holder` field is not checked, nor is its presence required by the endpoint. (Interesting fact, when a certificate is generated with no `holder` field specified in the request, the server automatically adds a `holder` field whose value is `undefined`, so there's still a holder name).
+- The `type` field MUST either be `silver` or `gold` (what I've wanted to reach for so long), anything else and the server rejects the request.
+
+But then, while I was brainlessly changing random bytes in the encrypted data, out of nowhere, a _miracle_ happened.
+
+The server replied with something I had seen too many times already: `invalid cert type s:lver`.
+
+Waiiiiiiiiiiiit a minute... I was used to this response by now, but so far the certificate type always got replaced by garbage bytes, because I was thrashing its cipher block.
+
+And now, it seemed that I unwillingly and randomly changed one of its characters?!
+
+I tried changing the same byte, and the exact same character got replaced by something else. Tried changing the byte after, and the character after also got replaced by something else. I knew I was on the right track, although I didn't know how.
+
+Now that I was able to change the characters of the certificate type, and having quickly understood that the relation between the encrypted byte I was changing and the character it got decrypted to was just an XOR operation, I carefully changed 5 bytes of the certificate type to read the following: `gold[0xFF]`.
+
+I quickly then sent this newly-crafted certificate for appraisal, and saw that not only was the certificate accepted by the server, but also that its type was indeed `gold`. A quick F5 on the event page, and I had indeed achieved Cracker Cavern IV and got the max score of 1338, yay...
+
+...except I still wasn't happy: indeed I had completed this challenge, but that wasn't fulfilling. I didn't know how I did that, I just had an extreme amount of luck by flipping that random byte. I had to know why it worked, and at that time, I was feeling empty, feeling like a fraud, and I even started to write overexaggerated stuff about how I felt back then.
+
+Anyhow, because I was also feeling lazy, I decided to write something that would [play the lottery for me](https://github.com/Kuruyia/zzazz2022/tree/main/dev/zzazz2022_autolottery), watched some YouTube video and went to sleep.
+
+And only 5 minutes after having closed down my laptop, my brain decided to start working again and told me something along the lines of "hey m8, think I found why it worked, how 'bout you open your laptop and write everything down. that was not a question. thx".
+
+So that's exactly what I did, some 1AM thoughts, on why what I had done worked:
+
+Actually, instead of what I originally thought, this certificate must be encrypted using `AES-CBC`, which introduces a direct dependency between a cipher block and the one preceding.
+
+In fact, with `AES-CBC`, when you're done decrypting a cipher block, you must XOR the result of this decryption with the previous cipher block to obtain the correct plaintext.
+
+Does that ring a bell? That's exactly what I've accidentally done to solve this challenge: changed the bytes that were 16 bytes before the value of the `type` field so I could manipulate the result of this XOR operation to be whatever I wanted, in this case `gold`.
+
+But, in doing so, we're actually thrashing the entire cipher block that we're actually manipulating to change the values of the next cipher block. Is it that important tho'? 
+
+Apparently not, because 1) When I did that, I successfully got a gold certificate, but more importantly, 2) the cipher block I was thrashing contained the end of the serial number and the beginning of the holder name, BUT I already discovered that the serial number format was not being checked anyway, and that an holder was not necessary for a certificate to be considered valid. Bingo, I now knew why what I did worked, and I can proudly say that:
+
+Cracker Cavern IV is done!
+
+### Conclusion
+As a conclusion, doing those Cracker Cavern challenges was a lot of fun, but saying this was all the fun I had would be incorrect.
+
+I have a huge respect for everything that went behind the scenes, such as the server and client, the ACE savefile, all the map and quests design, the YEET challenges...
+
+All of that was very cool, and once again thanks to TheZZAZZGlitch for having done that.
+
+I finally got my revenge on Glitchland by finishing all the challenges that it had to offer and, while I don't remember a lot of the 2018 event, I always thought good of it, and it was a huge pleasure to be able to come back to the region in all its 3rd gen glory!
