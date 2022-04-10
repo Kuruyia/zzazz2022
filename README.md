@@ -210,3 +210,12 @@ I have a huge respect for everything that went behind the scenes, such as the se
 All of that was very cool, and once again thanks to TheZZAZZGlitch for having done that.
 
 I finally got my revenge on Glitchland by finishing all the challenges that it had to offer and, while I don't remember a lot of the 2018 event, I always thought good of it, and it was a huge pleasure to be able to come back to the region in all its 3rd gen glory!
+
+## Directory structure
+- `dev/` - The directory containing all the programs I've written for this event.
+- `cert_gold.bin` - The winning certificate, one that is working for completing the Cracker Cavern IV challenge.
+- `challenge3_bytecode.bin` - A raw dump of the bytecode of the script that's calculating and verifying the checksums of the password for the Cracker Cavern III challenge.
+- `challenge3_script.txt` - A hand-made disassembly of some parts of the script of Cracker Cavern III, as well as some other stuff related to that challenge.
+- `map.pdf` - A map of Glitchland. Very high quality.
+- `packets_reverse.txt` - Stuff about some packets that are being exchanged between the server and the client.
+- `TODO.txt` - The OG file: the one that contains all my notes from the very beginning of my playthrough.
